@@ -18,7 +18,7 @@ class Brand extends \yii\db\ActiveRecord
 {
     public static $status=['0'=>'隐藏','1'=>'显示'];
     //图片上传
-    public $imgFile;
+//    public $imgFile;
 
     /**
      * @inheritdoc
@@ -34,11 +34,11 @@ class Brand extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name','sort','intro'], 'required'],
+            [['name','sort','intro',], 'required'],
             [['sort', 'status'], 'integer'],
             [['name', 'intro'], 'string', 'max' => 255],
-//            [['logo'], 'string', 'max' => 200],
-            [['imgFile'],'file','extensions' => ['png','jpg','gif'],'skipOnEmpty' =>true],
+            [['logo'], 'string', 'max' => 200],
+//         [['imgFile'],'file','extensions' => ['png','jpg','gif'],'skipOnEmpty' =>true],
 //            [['imgFile'],'safe']
         ];
     }
@@ -54,7 +54,7 @@ class Brand extends \yii\db\ActiveRecord
             'intro' => '简介',
             'sort' => '排序',
             'status' => '状态',
-            'imgFile'=>'LOGO'
+//            'imgFile'=>'LOGO'
         ];
     }
 }

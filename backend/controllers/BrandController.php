@@ -3,11 +3,17 @@
 namespace backend\controllers;
 
 use backend\models\Brand;
+use suncky\yii\widgets\webuploader\actions\AttachmentUploaderAction;
+use suncky\yii\widgets\webuploader\actions\ImageUploaderAction;
 use yii\data\Pagination;
+use yii\helpers\Json;
 use yii\web\UploadedFile;
+use flyok666\qiniu\Qiniu;
 
 class BrandController extends \yii\web\Controller
 {
+
+
     /**
      * 品牌列表页 分页显示
      * @return string
@@ -37,11 +43,11 @@ class BrandController extends \yii\web\Controller
         $request=\Yii::$app->request;
 
         if($model->load($request->post())){
-            $model->imgFile=UploadedFile::getInstance($model,'imgFile');
-            $filePath='images/brand/'.time().".".$model->imgFile->extension;
-            $model->imgFile->saveAs($filePath,false);
-            //追加图片路径到真实数据库模型类的属性
-            $model->logo=$filePath;
+//            $model->imgFile=UploadedFile::getInstance($model,'imgFile');
+//            $filePath='images/brand/'.time().".".$model->imgFile->extension;
+//            $model->imgFile->saveAs($filePath,false);
+//            //追加图片路径到真实数据库模型类的属性
+//            $model->logo=$filePath;
             $model->save();
             //通过session对象实现提示跳转提示
             \Yii::$app->session->setFlash("success","添加成功");
@@ -62,13 +68,13 @@ class BrandController extends \yii\web\Controller
         $model=Brand::findOne($id);
         $request=\Yii::$app->request;
         if($model->load($request->post())){
-            $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
-            if($model->imgFile){
-                $filePath = 'images/brand/' . time() . "." . $model->imgFile->extension;
-                $model->imgFile->saveAs($filePath, false);
-                //追加图片路径到真实数据库模型类的属性
-                $model->logo = $filePath;
-            }
+//            $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+//            if($model->imgFile){
+//                $filePath = 'images/brand/' . time() . "." . $model->imgFile->extension;
+//                $model->imgFile->saveAs($filePath, false);
+//                //追加图片路径到真实数据库模型类的属性
+//                $model->logo = $filePath;
+//            }
 
             $model->save();
             //通过session对象实现提示跳转提示
@@ -106,5 +112,44 @@ class BrandController extends \yii\web\Controller
         return $this->redirect(['brand/index']);
     }
 
+    public function actionUpload()
+    {
+//      $info=[
+//            'code'=>0,
+//            //回显图片
+//            'url'=>'http://wh.itsource.cn/upload/superStar/superStar_picture/2017-09-18/304caf33-67ae-459a-a2bb-44bd84df68c4.jpg',
+//           //相对路径
+//            'attachment'=>'http://wh.itsource.cn/upload/superStar/superStar_picture/2017-09-18/304caf33-67ae-459a-a2bb-44bd84df68c4.jpg'
+//        ];
 
+//        var_dump($_FILES);exit;
+//七牛云图片上传
+        $config = [
+            //AK
+            'accessKey'=>'nj6THiSvr-EU_UKq4v8y5Sn6yI4NUMl_qscHH5SJ',
+            //sK
+            'secretKey'=>'agcgICaWx7GCBSLqW3DvQJTfv6PQ4qIqDZ48OF0R',
+            //域名
+            'domain'=>'http://7xl74q.com1.z0.glb.clouddn.com',
+            //空间名称
+            'bucket'=>'iyaku',
+            'area'=>Qiniu::AREA_HUADONG
+        ];
+        //实例化七牛云对象
+        $qiniu = new Qiniu($config);
+        //构造一个图片名称
+        $key = time().rand(10000,999999);
+        $qiniu->uploadFile($_FILES['file']['tmp_name'],$key);
+        $url = $qiniu->getLink($key);
+
+        //返回      {"code": 0, "url": "http://domain/图片地址", "attachment": "图片地址"}
+        $info=[
+          'code'=>0,
+            'url'=>$url,
+            'attachment'=>$url,
+        ];
+        exit(Json::encode($info));
+    }
+    
+    
 }
