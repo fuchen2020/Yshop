@@ -11,8 +11,11 @@ use yii\widgets\LinkPager;
     }
 </style>
 <h1>品牌列表</h1>
-<a href="add" class="btn btn-info">添加品牌</a>&nbsp;&nbsp;
-<a href="restore" class="btn btn-info">恢复删除</a>
+<?php
+echo \yii\helpers\Html::a('添加品牌',['add'],['class'=>"btn btn-info"]);
+echo '&ensp;';
+echo \yii\helpers\Html::a('恢复删除',['restore'],['class'=>"btn btn-info"]);
+?>
 <div class="container" style="margin-top:10px;text-align: center;">
     <!--数据显示表格-->
     <table class="table table-hover" id="tab">
@@ -33,7 +36,9 @@ use yii\widgets\LinkPager;
                 <td><?=$brand->intro ?></td>
                 <td>
                   <?php
-                  echo \yii\bootstrap\Html::img('/'.$brand->logo,['height'=>'40px']);
+
+
+                  echo \yii\bootstrap\Html::img($brand->logos,['height'=>'40px']);
                   ?>
                 </td>
                 <td><?=$brand->sort ?></td>

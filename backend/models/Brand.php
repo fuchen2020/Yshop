@@ -57,4 +57,17 @@ class Brand extends \yii\db\ActiveRecord
 //            'imgFile'=>'LOGO'
         ];
     }
+
+    //控制图片输出
+    public function getlogos()
+    {
+        if(substr($this->logo,0,7)=='http://'){
+            return $this->logo;
+        }else{
+
+            return "@web/".$this->logo;
+        }
+    }
+
+
 }

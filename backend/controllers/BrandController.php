@@ -43,11 +43,6 @@ class BrandController extends \yii\web\Controller
         $request=\Yii::$app->request;
 
         if($model->load($request->post())){
-//            $model->imgFile=UploadedFile::getInstance($model,'imgFile');
-//            $filePath='images/brand/'.time().".".$model->imgFile->extension;
-//            $model->imgFile->saveAs($filePath,false);
-//            //追加图片路径到真实数据库模型类的属性
-//            $model->logo=$filePath;
             $model->save();
             //通过session对象实现提示跳转提示
             \Yii::$app->session->setFlash("success","添加成功");
@@ -68,14 +63,6 @@ class BrandController extends \yii\web\Controller
         $model=Brand::findOne($id);
         $request=\Yii::$app->request;
         if($model->load($request->post())){
-//            $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
-//            if($model->imgFile){
-//                $filePath = 'images/brand/' . time() . "." . $model->imgFile->extension;
-//                $model->imgFile->saveAs($filePath, false);
-//                //追加图片路径到真实数据库模型类的属性
-//                $model->logo = $filePath;
-//            }
-
             $model->save();
             //通过session对象实现提示跳转提示
             \Yii::$app->session->setFlash("success","修改成功");
