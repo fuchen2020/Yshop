@@ -20,7 +20,6 @@ class Brand extends \yii\db\ActiveRecord
     //图片上传
     public $imgFile;
 
-
     /**
      * @inheritdoc
      */
@@ -35,11 +34,12 @@ class Brand extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name','sort','intro'], 'required'],
             [['sort', 'status'], 'integer'],
             [['name', 'intro'], 'string', 'max' => 255],
 //            [['logo'], 'string', 'max' => 200],
             [['imgFile'],'file','extensions' => ['png','jpg','gif'],'skipOnEmpty' =>true],
+//            [['imgFile'],'safe']
         ];
     }
 
