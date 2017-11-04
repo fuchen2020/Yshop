@@ -33,7 +33,7 @@
   购物车设计
  
 #3.功能模块实现
-#### 3.1.品牌模块需求
+## 3.1.品牌模块需求
  1.品牌管理功能涉及品牌的列表展示、品牌添加、修改、删除功能。
  2.品牌需要保存缩略图和简介。
  3.品牌删除使用逻辑删除。
@@ -46,12 +46,39 @@
 'sort'=>$this->smallInteger()->comment('排序'),
 'status'=>$this->smallInteger()->comment('状态')````
 ```
-#### 3.2 品牌回收站
+#### 品牌回收站
   1.一键还原之前删除的品牌数据
   2.彻底删除品牌数据
-#### 3.3.要点难点及解决方案
+#### 要点难点及解决方案
  1.删除使用逻辑删除,只改变status属性,不删除记录
  2.使用webupload插件,提升用户体验
  3.使用composer下载和安装 webupload
  4.composer安装插件报错,解决办法:
- 5.注册七牛云账号
+ 5.实现七牛云图片上传保存
+ 
+ ## 3.1.文章模块需求
+ 1.文章分类数据库增删改查
+ 2.文章表和文章内容表的一对一关联增删改查
+ #### 数据库设计
+ ```sql
+ //文章分类
+'id' => $this->primaryKey(),
+'name'=>$this->string(30)->notNull()->comment('名称'),
+'intro'=>$this->string()->comment('简介'),
+'status'=>$this->integer()->notNull()->comment('状态'),
+'sort'=>$this->smallInteger()->notNull()->defaultValue('10')->comment('排序'),
+//文章信息
+'id' => $this->primaryKey(),
+'name'=>$this->string(30)->notNull()->comment('名称'),
+'type'=>$this->smallInteger()->notNull()->comment('文章分类'),
+'intro'=>$this->string()->comment('简介'),
+'status'=>$this->integer()->notNull()->comment('状态'),
+'sort'=>$this->integer()->notNull()->defaultValue('10')->comment('排序'),
+'addtime'=>$this->integer()->notNull()->comment('发布时间')
+//文章内容
+ 'id' => $this->primaryKey(),
+'article_id'=>$this->integer()->notNull()->comment('文章ID'),
+'content'=>$this->text()->comment('文章内容')
+
+```
+ 
