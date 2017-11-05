@@ -53,7 +53,7 @@ class GoodsCaetgory extends \yii\db\ActiveRecord
             'depth' => '深度',
             'name' => '分类名称',
             'intro' => '简介',
-            'parent_id' => '父级目录',
+            'parent_id' => '父级ID',
         ];
     }
 
@@ -83,5 +83,7 @@ class GoodsCaetgory extends \yii\db\ActiveRecord
     {
         return new MenuQuery(get_called_class());
     }
+
+
 
 }

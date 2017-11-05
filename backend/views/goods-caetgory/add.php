@@ -1,7 +1,7 @@
 <?php
 $form=\yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name');
-echo \liyuze\ztree\ZTree::widget([
+echo '<span style="font-weight: bold;font-size: 16px;">选择父目录：</span>&nbsp;'. \liyuze\ztree\ZTree::widget([
     'setting' => '{
             callback: {
 		        onClick: function(event, treeId, treeNode){
