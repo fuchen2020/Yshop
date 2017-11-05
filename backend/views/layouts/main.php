@@ -50,7 +50,13 @@ AppAsset::register($this);
             'items'=>[
                 ['label' => '分类管理', 'url'=>['article-caetgory/index']],
                 ['label' => '文章管理', 'url'=>['article/index']],
-                ['label' => '内容管理', 'url'=>['article-content/index']],
+            ],
+        ],
+        [
+            'label'=>'商品管理',
+            'items'=>[
+                ['label' => '分类管理', 'url'=>['goods-caetgory/index']],
+                ['label' => '商品管理', 'url'=>['goods/index']],
             ],
         ],
     ];
