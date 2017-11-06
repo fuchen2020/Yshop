@@ -86,6 +86,13 @@ class GoodsCaetgoryController extends \yii\web\Controller
         return $this->render('add',['model'=>$model,'catess'=>$catess]);
     }
 
+    /**
+     * 商品分类的删除
+     * 利用了两个模型类（GoodsCaetgory，Dels），其中Dels只用于删除深度为0的根节点
+     * @param $id
+     * @return \yii\web\Response
+     *
+     */
     public function actionDelete($id)
     {
         //获取某分类的所有子孙分类

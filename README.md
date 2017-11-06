@@ -17,7 +17,7 @@
 # 2.系统功能模块
 ##2.1.需求分析
 - 品牌管理：列表展示、品牌添加、修改、删除功能
-- 商品分类管理：
+- 商品分类管理：列表展示（动态展示）、添加（回显）、修改、删除功能
 - 商品管理：
 - 账号管理：
 - 权限管理：
@@ -80,5 +80,113 @@
 'article_id'=>$this->integer()->notNull()->comment('文章ID'),
 'content'=>$this->text()->comment('文章内容')
 
+```
+ ## 3.1.商品分类模块需求
+  1.商品分类管理功能涉及商品分类的列表展示、分类添加（回显）、修改、删除功能。
+  2.数据库设计
+  ```sql
+     'id' => $this->primaryKey(),
+    'tree' => $this->integer()->notNull()->comment('根目录'),
+    'lft' => $this->integer()->notNull()->comment('左值'),
+    'rgt' => $this->integer()->notNull()->comment('右值'),
+    'depth' => $this->integer()->notNull()->comment('深度'),
+    'name' => $this->string()->notNull()->comment('分类名称'),
+    'intro'=>$this->string()->comment('简介'),
+```
+#### 要点难点及解决方案
+    1.通过Nested-sets实现分类左值，右值计算，添加分类。
+    （https://packagist.org/packages/creocoder/yii2-nested-sets）
+    2.添加，修改的分类数据回显，通过利用Z-tree插件实现
+    
+    3.分类列表数据展示，利用Treegrid插件实现
+    （https://packagist.org/packages/leandrogehlen/yii2-treegrid）
+    4.解决Treegrid展示的数据ID错乱的问题，重写ActionColumn类；
+```php
+namespace backend\components;
+
+use yii\grid\ActionColumn;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use Yii;
+
+class TreeColumn extends ActionColumn
+{
+//    public $template = '{:view} {:update} {:delete}';
+     public $template = '{:update} {:delete}';
+    /**
+     * 重写了标签渲染方法。
+     * @param mixed $model
+     * @param mixed $key
+     * @param int $index
+     * @return mixed
+     */
+    protected function renderDataCellContent($model, $key, $index)
+    {
+        return preg_replace_callback('/\\{([^}]+)\\}/', function ($matches) use ($model, $key, $index) {
+
+            list($name, $type) = explode(':', $matches[1].':'); // 得到按钮名和类型
+            if($name == 'view'){
+                $url = Yii::$app->request->hostInfo.'/product/'.$model->id.'.html';
+                return call_user_func($this->buttons[$type], $url, $model, $key,$options=['target'=>'_blank']);
+
+            }else{
+                if (!isset($this->buttons[$type])) { // 如果类型不存在 默认为view
+                    $type = 'view';
+                }
+
+                if ('' == $name) { // 名称为空，就用类型为名称
+                    $name = $type;
+                }
+
+                $url = $this->createUrl($name, $model, $key, $index);
+
+                return call_user_func($this->buttons[$type], $url, $model, $key);
+            }
+
+        }, $this->template);
+
+    }
+    /**
+     * 方法重写，让view默认新页面打开
+     * @return [type] [description]
+     */
+    protected function initDefaultButtons(){
+
+        if (!isset($this->buttons['view'])) {
+            $this->buttons['view'] = function ($url, $model, $key) {
+
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'View'),
+                    'aria-label' => Yii::t('yii', 'View'),
+                    'data-pjax' => '0',
+                    'target'=>'_blank'
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', '/goods-category/view?id='.$model->id, $options);
+            };
+        }
+        if (!isset($this->buttons['update'])) {
+            $this->buttons['update'] = function ($url, $model, $key) {
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'Update'),
+                    'aria-label' => Yii::t('yii', 'Update'),
+                    'data-pjax' => '0',
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '/goods-caetgory/update?id='.$model->id, $options);
+            };
+        }
+        if (!isset($this->buttons['delete'])) {
+            $this->buttons['delete'] = function ($url, $model, $key) {
+                $options = array_merge([
+                    'title' => Yii::t('yii', 'Delete'),
+                    'aria-label' => Yii::t('yii', 'Delete'),
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ], $this->buttonOptions);
+                return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/goods-caetgory/delete?id='.$model->id, $options);
+            };
+        }
+    }
+}
 ```
  
