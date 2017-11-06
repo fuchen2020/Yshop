@@ -97,19 +97,21 @@ class GoodsCaetgoryController extends \yii\web\Controller
     {
         //获取某分类的所有子孙分类
         $category = GoodsCaetgory::findOne(['parent_id'=>$id]);
+//        GoodsCaetgory::findOne($id)->deleteWithChildren();
 //        var_dump($category);exit;
         if($category==null){
             $depths=Dels::findOne($id)->depth;
 //            var_dump($depths);exit;
             if($depths===0){
-                Dels::findOne($id)->delete();
+//                Dels::findOne($id)->delete();
+                GoodsCaetgory::findOne($id)->deleteWithChildren();
             }else{
                 GoodsCaetgory::findOne($id)->delete();
             }
                 \Yii::$app->session->setFlash("success",'删除分类成功');
                 return $this->redirect(['index']);
         }else{
-            \Yii::$app->session->setFlash("success",'不能直接删除有子孙分类的分类');
+            \Yii::$app->session->setFlash("danger",'不能直接删除有子孙分类的分类');
             return $this->redirect(['index']);
         }
     }
