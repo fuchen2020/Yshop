@@ -18,7 +18,7 @@
 ##2.1.需求分析
 - 品牌管理：列表展示、品牌添加、修改、删除功能
 - 商品分类管理：列表展示（动态展示）、添加（回显）、修改、删除功能
-- 商品管理：
+- 商品管理：列表展示、添加（多图上传回显,富文本）、修改、删除功能
 - 账号管理：
 - 权限管理：
 - 菜单管理：
@@ -81,7 +81,7 @@
 'content'=>$this->text()->comment('文章内容')
 
 ```
- ## 3.1.商品分类模块需求
+ ## 3.2.商品分类模块需求
   1.商品分类管理功能涉及商品分类的列表展示、分类添加（回显）、修改、删除功能。
   2.数据库设计
   ```sql
@@ -188,5 +188,137 @@ class TreeColumn extends ActionColumn
         }
     }
 }
+```
+ ## 3.3.商品管理模块需求
+   1.商品管理功能涉及商品数据的列表展示、分类添加（回显）、多图上传（回显）、富文本编辑器、修改、删除功能。
+   2.数据库设计
+```sql
+   //商品表
+'id' => $this->primaryKey(),
+'name'=>$this->string(100)->notNull()->comment('商品名称'),
+'sn'=>$this->string(30)->notNull()->comment('商品编号'),
+'goods_category_id'=>$this->integer()->notNull()->comment('分类ID'),
+'brand_id'=>$this->integer()->notNull()->comment('品牌ID'),
+'logo_id'=>$this->integer()->notNull()->comment('logoID'),
+'market_price'=>$this->decimal(10,2)->notNull()->comment('市场价'),
+'price'=>$this->decimal(10,2)->notNull()->comment('本店价'),
+'stock'=>$this->integer()->notNull()->comment('库存'),
+'status'=>$this->smallInteger()->notNull()->comment('状态'),
+'sort'=>$this->integer()->notNull()->comment('排序'),
+'create_at'=>$this->integer()->notNull()->comment('添加时间')
+
+//商品图片表
+'id' => $this->primaryKey(),
+'goods_id'=>$this->integer()->notNull()->comment('商品ID'),
+'is_logo'=>$this->string()->notNull()->comment('是否LOGO'),
+'img'=>$this->string()->notNull()->comment('图片地址')
+
+//商品详情表
+
+ 'goods_id' => $this->integer()->notNull()->comment('商品ID'),
+'content'=>$this->text()->notNull()->comment('商品详情')
+
+//商品编号生成统计每天添加商品量表
+'id' => $this->primaryKey(),
+'day'=>$this->string()->notNull()->comment('年月日'),
+'count'=>$this->integer()->notNull()->defaultValue(0)->comment('当日添加商品统计')
+```
+#### 要点难点及解决方案
+    1.通过webupload插件实现多图上传。
+    2.多图回显（显示视图前 利用foreach循环追加imgPath属性）
+    3.自动生成订单编号
+    4.富文本编辑器（利用插件composer）
+```php
+//多图上传视图
+echo $form->field($goods, 'imgPath')->widget('manks\FileInput', [
+    'clientOptions' => [
+        'pick' => [
+            'multiple' => true,
+        ],
+        'server' => \yii\helpers\Url::to(['upload']),
+        'accept' => [
+            'extensions' => ['png','jpg','gif'],
+        ],
+    ],
+]);
+//富文本编辑器视图
+echo $form->field($goodsDetails, 'content')->widget(\bajadev\ckeditor\CKEditor::className(),[
+    'editorOptions' => [
+        'preset' => 'full', //basic, standard, full
+            'inline' => false,
+            'filebrowserBrowseUrl' => 'browse-images',
+            'filebrowserUploadUrl' => 'upload-images',
+            'extraPlugins' => 'imageuploader',
+        ],
+    ]);
+    
+//商品添加逻辑处理
+/**
+     * 添加商品
+     * @return string|\yii\web\Response
+     */
+    public function actionAdd()
+    {
+        $goods=new Goods();
+        $goodsDetails=new GoodsDetails();
+        $goodsDaycount=new GoodsDayCount();
+        $cate=ArrayHelper::map(GoodsCaetgory::find()->where(['depth'=>1])->all(),'id','name');
+        $brand=ArrayHelper::map(Brand::find()->all(),'id','name');
+        $re=\Yii::$app->request;
+        if($re->isPost) {
+            $data = $re->post();
+//           var_dump($data);exit;
+            //绑数据到模型
+            $goods->load($data);
+            //货号自动生成
+            if(empty($data['Goods']['sn'])){
+                $ymd=date('Ymd',time());
+                $count=$goodsDaycount->findOne(['day'=>$ymd]);
+                if(!$count){
+                    $goods->sn=$ymd.'0000001';
+                }else{
+                    $sn=$count->count + 1;
+                    $goods->sn=$ymd.substr('0000000'.$sn, -7);
+                }
+            }
+//            var_dump($goods);exit;
+            $goodsDetails->load($data);
+            //保存商品信息
+            if ($goods->save()) {
+                //更新每日商品添加数据统计
+                if(!$count){
+                    $goodsDaycount->day=date('Ymd',time());
+                    $goodsDaycount->count=1;
+                    $goodsDaycount->insert();
+                }else{
+                    $count->count=$sn;
+                    $count->update();
+                }
+
+
+                //获取商品ID 关联到商品详情ID
+                $goodsDetails->goods_id = $goods->id;
+                //保存商品详情内容
+                $goodsDetails->save();
+                //多图循环存入数据库
+                foreach ($data['Goods']['imgPath'] as $k => $v) {
+                    $goodsImg=new GoodsImg();
+                    $goodsImg->goods_id = $goods->id;
+                    $goodsImg->img = $v;
+                    $goodsImg->save();
+                }
+
+            }else{
+                var_dump($goods->getErrors());exit;
+            }
+
+            \Yii::$app->session->setFlash("success", "添加成功");
+            return $this->redirect(['goods/index']);
+        }
+        return $this->render('add',['goods'=>$goods,'goodsDetails'=>$goodsDetails,'cate'=>$cate,'brand'=>$brand]);
+    }
+
+    
+    
 ```
  
