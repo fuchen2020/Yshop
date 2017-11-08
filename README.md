@@ -228,6 +228,8 @@ class TreeColumn extends ActionColumn
     2.多图回显（显示视图前 利用foreach循环追加imgPath属性）
     3.自动生成订单编号
     4.富文本编辑器（利用插件composer）
+    (composer require kucha/ueditor)
+    5.按商品名称、货号、价格范围、状态条件进行搜索
 ```php
 //多图上传视图
 echo $form->field($goods, 'imgPath')->widget('manks\FileInput', [
@@ -317,8 +319,68 @@ echo $form->field($goodsDetails, 'content')->widget(\bajadev\ckeditor\CKEditor::
         }
         return $this->render('add',['goods'=>$goods,'goodsDetails'=>$goodsDetails,'cate'=>$cate,'brand'=>$brand]);
     }
-
     
+    
+    //搜索框实现代码
+    
+    //view部分
+    <!--搜索框-->
+    <form class="form-inline pull-right" id="device-search" role="form" action="index" method="get">
+        <input name="_csrf-backend" type="hidden" id="_csrf" value="<?= Yii::$app->request->csrfToken ?>">
+        <div class="form-group">
+            <input type="text" class="form-control" name="goodsname" placeholder="商品名称或者货号……">
+        </div>
+        <select class="form-control" name="status">
+            <option value="0">待上架</option>
+            <option value="1">已上架</option>
+        </select>
+        <div class="form-group ">
+            <input type="text" class="form-control" name="prices" placeholder="最低价格……" size="5px">-
+        </div>
+        <div class="form-group ">
+            <input type="text" class="form-control" name="pricem" placeholder="最高价格……" size="5px">
+        </div>
+        <button class="btn btn-default">搜索</button>
+    </form>
+    
+    //controller部分逻辑
+    
+     public function actionIndex()
+        {
+            $re=\Yii::$app->request;
+            $query=Goods::find();
+            $name=$re->get('goodsname');
+            $status=$re->get('status');
+            $prices=$re->get('prices');
+            $pricem=$re->get('pricem');
+           if(!empty($name))
+            {
+                $query->andwhere("name like '%{$name}%' or sn like '%{$name}%'");
+            }
+            if($status=="0" or $status=="1")
+            {
+                $query->andwhere("status = {$status}");
+            }
+           if($prices>0){
+                $query->andwhere("price >= {$prices}");
+            }
+            if($pricem>0){
+                $query->andwhere( "price <= {$pricem}");
+            }
+    
+            $pageSize=5;
+            $pagination=new Pagination(
+                [
+                    //传递每页显示的条数
+                    'pageSize' => $pageSize,
+                    //传递数据总条数
+                    'totalCount' =>Goods::find()->count(),
+                ]
+            );
+            $goods=$query->limit($pagination->limit)->offset($pagination->offset)->all();
+            return $this->render('index',['goods' => $goods,'pagination'=>$pagination]);
+        }
     
 ```
+
  

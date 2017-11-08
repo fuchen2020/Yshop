@@ -15,22 +15,15 @@ echo $form->field($goods, 'imgPath')->widget('manks\FileInput', [
         'pick' => [
             'multiple' => true,
         ],
-         'server' => \yii\helpers\Url::to(['upload']),
-         'accept' => [
-         	'extensions' => ['png','jpg','gif'],
-         ],
+//        'server' => \yii\helpers\Url::to(['upload']),
+        'accept' => [
+            'extensions' => ['png','jpg','gif'],
+        ],
     ],
 ]);
 //echo $form->field($goodsDetails,'content')->textarea();
-echo $form->field($goodsDetails, 'content')->widget(\bajadev\ckeditor\CKEditor::className(),[
-    'editorOptions' => [
-        'preset' => 'full', //basic, standard, full
-            'inline' => false,
-            'filebrowserBrowseUrl' => 'browse-images',
-            'filebrowserUploadUrl' => 'upload-images',
-            'extraPlugins' => 'imageuploader',
-        ],
-    ]);
+echo $form->field($goodsDetails,'content')->widget('kucha\ueditor\UEditor',[]);
+
 echo \yii\bootstrap\Html::submitButton('提交',['class'=>'btn btn-success']);
 
 \yii\bootstrap\ActiveForm::end();

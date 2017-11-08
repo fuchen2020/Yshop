@@ -6,7 +6,29 @@ use yii\widgets\LinkPager;
 <h1>商品列表</h1>
 <?php
 echo \yii\helpers\Html::a('添加商品',['add'],['class'=>"btn btn-info"]);
+echo "&nbsp;";
+echo \yii\helpers\Html::a('显示全部',['index'],['class'=>"btn btn-info"]);
 ?>
+<!--搜索框-->
+<form class="form-inline pull-right" id="device-search" role="form" action="index" method="get">
+    <input name="_csrf-backend" type="hidden" id="_csrf" value="<?= Yii::$app->request->csrfToken ?>">
+    <div class="form-group">
+        <input type="text" class="form-control" name="goodsname" placeholder="商品名称或者货号……">
+    </div>
+    <select class="form-control" name="status">
+        <option value="0">待上架</option>
+        <option value="1">已上架</option>
+    </select>
+    <div class="form-group ">
+        <input type="text" class="form-control" name="prices" placeholder="最低价格……" size="5px">-
+    </div>
+    <div class="form-group ">
+        <input type="text" class="form-control" name="pricem" placeholder="最高价格……" size="5px">
+    </div>
+    <button class="btn btn-default">搜索</button>
+</form>
+
+
 <div class="container" style="margin-top:10px;text-align: center;">
     <!--数据显示表格-->
     <table class="table table-hover" id="tab">

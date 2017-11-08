@@ -24,7 +24,7 @@
 		"creocoder/yii2-nested-sets": "0.9.*",
         "liyuze/yii2-ztree": "^1.0",
         "leandrogehlen/yii2-treegrid": "^1.0",
-        "bajadev/yii2-ckeditor": "^1.3"
+        "kucha/ueditor": "^1.21"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

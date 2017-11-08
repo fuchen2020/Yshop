@@ -59,6 +59,13 @@ AppAsset::register($this);
                 ['label' => '商品管理', 'url'=>['goods/index']],
             ],
         ],
+        [
+            'label'=>'管理员',
+            'items'=>[
+                ['label' => '管理员列表', 'url'=>['admin/index']],
+                ['label' => '管理员管理', 'url'=>['admin/index']],
+            ],
+        ],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
