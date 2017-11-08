@@ -63,9 +63,11 @@ AppAsset::register($this);
             'label'=>'管理员',
             'items'=>[
                 ['label' => '管理员列表', 'url'=>['admin/index']],
-                ['label' => '管理员管理', 'url'=>['admin/index']],
+                ['label' => '管理员登陆', 'url'=>['admin/login']],
+                ['label' => '管理员退出', 'url'=>['admin/logout']],
             ],
         ],
+
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];

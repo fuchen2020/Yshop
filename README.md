@@ -382,5 +382,24 @@ echo $form->field($goodsDetails, 'content')->widget(\bajadev\ckeditor\CKEditor::
         }
     
 ```
+## 3.3.管理员管理模块需求
+    1.管理员功能涉及管理员数据的列表展示、添加（回显）、修改、删除功能。
+    2.后台自动登陆功能
+    3.数据库设计   
+
+```sql
+  'id' => 'ID',
+'username' => '用户名',
+'password' => '密码',
+'Salt' => '加盐',
+'email' => '邮箱',
+'token' => '自动登陆令牌',
+'token_create_time' => '令牌创建时间',
+'addtime' => '注册时间',
+'last_lg_time' => '最后登陆时间',
+'last_lg_ip' => '登陆IP',
+```
+
+
 
  
