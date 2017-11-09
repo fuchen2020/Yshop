@@ -7,27 +7,28 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = '后台登陆';
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
+<div class="container">
 
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-3">
+            <h1>&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span></span><?= Html::encode($this->title) ?></h1>
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-                 <?= $form->field($model, 'rememberMe')->checkbox()?>
-                <div class="form-group">
-                    <?= Html::submitButton('管理员登陆', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
+            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'rememberMe')->checkbox()?>
+            <div class="form-group ">
+              <?= Html::submitButton('管理员登陆', ['class' => 'btn btn-primary', 'name' => 'login-button', 'style'=>'margin-left:80px']) ?>
+            </div>
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+    <div style="margin-left: "></div>
+
 </div>
+
+</div>
+

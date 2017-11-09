@@ -11,11 +11,12 @@ echo \yii\helpers\Html::a('显示全部',['index'],['class'=>"btn btn-info"]);
 ?>
 <!--搜索框-->
 <form class="form-inline pull-right" id="device-search" role="form" action="index" method="get">
-    <input name="_csrf-backend" type="hidden" id="_csrf" value="<?= Yii::$app->request->csrfToken ?>">
+<!--    <input name="_csrf-backend" type="hidden" id="_csrf" value="= Yii::$app->request->csrfToken ?>">-->
     <div class="form-group">
         <input type="text" class="form-control" name="goodsname" placeholder="商品名称或者货号……">
     </div>
     <select class="form-control" name="status">
+        <option value="">上架状态</option>
         <option value="0">待上架</option>
         <option value="1">已上架</option>
     </select>

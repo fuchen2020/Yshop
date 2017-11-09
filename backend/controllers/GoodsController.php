@@ -38,7 +38,7 @@ class GoodsController extends \yii\web\Controller
         $status=$re->get('status');
         $prices=$re->get('prices');
         $pricem=$re->get('pricem');
-       if(!empty($name))
+       if(isset($name))
         {
             $query->andwhere("name like '%{$name}%' or sn like '%{$name}%'");
         }
