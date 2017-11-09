@@ -94,30 +94,33 @@ class AdminController extends \yii\web\Controller
      * 后台登陆
      * @return string|\yii\web\Response
      */
-//<?= $form->field($model, 'rememberMe')->checkbox()
+
     public function actionLogin()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $model=new Admin();
         $re=Yii::$app->request;
         if($re->isPost){
-//            var_dump($re->post()['Admin']['username']);exit;
-            $admin=Admin::findOne(['username'=>$re->post()['Admin']['username']]);
-//            var_dump($re->post()['Admin']['password'],$admin->password);exit;
-
+            $model->load($re->post());
+            $admin=Admin::findOne(['username'=>$model->username]);
             if($admin){
-                $pass=Yii::$app->security->validatePassword($re->post()['Admin']['password'],$admin->password);
-//                var_dump($pass);exit;
-                if($pass){
+                if(Yii::$app->security->validatePassword($model->password,$admin->password)){
                     $admin->auth_key=Yii::$app->security->generateRandomString();
                     $admin->last_lg_time=time();
                     $admin->last_lg_ip=Yii::$app->request->getUserIP();
                     $admin->save();
-                    Yii::$app->user->login($admin,3600*24*30);
+                    Yii::$app->user->login($admin,$model->rememberMe?3600*24*7:0);
+                    Yii::$app->session->setFlash('success','登陆成功');
                     return $this->redirect(['index']);
+                }else{
+                    $model->addError('password','密码不正确');
                 }
+            }else{
+                $model->addError('username','账号不存在');
             }
         }
-
         return $this->render('login', ['model' => $model]);
     }
 
@@ -128,7 +131,6 @@ class AdminController extends \yii\web\Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 
