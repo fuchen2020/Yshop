@@ -60,6 +60,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
             'addtime' => '注册时间',
             'last_lg_time' => '最后登陆时间',
             'last_lg_ip' => '登陆IP',
+            'rememberMe'=>'自动登陆'
         ];
     }
 

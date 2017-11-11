@@ -30,7 +30,7 @@ echo \yii\helpers\Html::a('显示全部',['index'],['class'=>"btn btn-info"]);
 </form>
 
 
-<div class="container" style="margin-top:10px;text-align: center;">
+
     <!--数据显示表格-->
     <table class="table table-hover" id="tab">
         <tr style="font-size: 18px;font-weight: bold;" id="th">
@@ -80,4 +80,3 @@ echo \yii\helpers\Html::a('显示全部',['index'],['class'=>"btn btn-info"]);
     ]);
 
     ?>
-</div>

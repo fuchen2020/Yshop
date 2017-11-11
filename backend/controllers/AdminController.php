@@ -131,7 +131,8 @@ class AdminController extends \yii\web\Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+//        return $this->goHome();
+        return $this->redirect(['login']);
     }
 
 
