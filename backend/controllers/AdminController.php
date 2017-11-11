@@ -3,6 +3,7 @@
 namespace backend\controllers;
 use Yii;
 use backend\models\Admin;
+use yii\helpers\ArrayHelper;
 
 class AdminController extends \yii\web\Controller
 {
@@ -23,6 +24,7 @@ class AdminController extends \yii\web\Controller
     public function actionAdd()
     {
         $admin=new Admin();
+        $auth=Yii::$app->authManager;
         $re=\Yii::$app->request;
         if($re->isPost){
 
@@ -31,17 +33,22 @@ class AdminController extends \yii\web\Controller
                 //hash加密
                     $pass=\Yii::$app->security->generatePasswordHash($admin->password);
                     $admin->password=$pass;
-                    $admin->save();
+                    if($admin->save())
+                    {
+                        $role=$auth->getRole($admin->role);
+                        $auth->assign($role,$admin->id);
+                    }
                     \Yii::$app->session->setFlash('success','添加成功');
                     return $this->redirect(['index']);
             }else{
                 $admin->getErrors();exit;
             }
-
         }
 
+        $role=$auth->getRoles();
+        $roles=ArrayHelper::map($role,'name','name');
 //        var_dump(\Yii::$app->request->getUserIP());exit;
-        return $this->render('add',['admin'=>$admin]);
+        return $this->render('add',['admin'=>$admin,'roles'=>$roles]);
 
     }
 

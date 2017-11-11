@@ -40,7 +40,11 @@
                         'icon' => 'handshake-o',
                         'url' => '#',
                         'items' => [
-                            ['label' => '品牌列表', 'icon' => 'hand-o-right', 'url' => ['brand/index']],
+                            ['label' => '品牌列表',
+                                'icon' => 'hand-o-right',
+                                'url' => ['brand/index'],
+                                'visible' => Yii::$app->user->can('brand/index')
+                            ],
                         ],
                     ],
 
@@ -59,8 +63,13 @@
                         'label' => '商品管理',
                         'icon' => 'cart-plus',
                         'url' => '#',
+                        'visible' => Yii::$app->user->can('goods/index'),
                         'items' => [
-                            ['label' => '商品列表', 'icon' => 'hand-o-right', 'url' => ['goods/index']],
+                            ['label' => '商品列表',
+                                'icon' => 'hand-o-right',
+                                'url' => ['goods/index'],
+                                'visible' => Yii::$app->user->can('goods/index')
+                            ],
                             ['label' => '商品分类', 'icon' => 'hand-o-right', 'url' => ['goods-caetgory/index']],
                         ],
                     ],

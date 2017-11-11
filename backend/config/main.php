@@ -45,8 +45,6 @@ return [
             'rules' => [
             ],
         ],
-        //后台模板
-
     ],
 
     'params' => $params,

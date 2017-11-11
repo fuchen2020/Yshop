@@ -23,6 +23,7 @@ use yii\web\IdentityInterface;
 class Admin extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $rememberMe;
+    public $role;
 
     /**
      * @inheritdoc
@@ -40,7 +41,8 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['username', 'password','email'], 'required'],
             [['email'], 'email'],
-            [['rememberMe'],'safe']
+            [['rememberMe'],'safe'],
+            [['role'],'safe'],
         ];
     }
 
