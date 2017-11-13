@@ -17,5 +17,5 @@ return [
     //配置语言包
     'language'=>'zh-CN',
     //访问默认控制器
-    'defaultRoute'=>'brand/index',
+    'defaultRoute'=>'admin/home',
 ];

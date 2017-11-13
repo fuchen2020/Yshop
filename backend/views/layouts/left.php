@@ -25,96 +25,31 @@
             </div>
         </form>
         <!-- /.search form -->
-
+<!--       显示左侧菜单栏，以及菜单图标显示-->
         <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
-                'items' => [
-                    ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
-                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii']],
-                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug']],
-                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
-                   //品牌管理
-                    [
-                        'label' => '品牌管理',
-                        'icon' => 'handshake-o',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => '品牌列表',
-                                'icon' => 'hand-o-right',
-                                'url' => ['brand/index'],
-                                'visible' => Yii::$app->user->can('brand/index')
-                            ],
-                        ],
-                    ],
-
-                    //文章管理
-                    [
-                        'label' => '文章管理',
-                        'icon' => 'file-word-o',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => '文章列表', 'icon' => 'hand-o-right', 'url' => ['article/index']],
-                            ['label' => '文章分类', 'icon' => 'hand-o-right', 'url' => ['article-caetgory/index']],
-                        ],
-                    ],
-                    //商品管理
-                    [
-                        'label' => '商品管理',
-                        'icon' => 'cart-plus',
-                        'url' => '#',
-                        'visible' => Yii::$app->user->can('goods/index'),
-                        'items' => [
-                            ['label' => '商品列表',
-                                'icon' => 'hand-o-right',
-                                'url' => ['goods/index'],
-                                'visible' => Yii::$app->user->can('goods/index')
-                            ],
-                            ['label' => '商品分类', 'icon' => 'hand-o-right', 'url' => ['goods-caetgory/index']],
-                        ],
-                    ],
-
-                    //文章管理
-                    [
-                        'label' => '管理员管理',
-                        'icon' => 'user-o',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => '管理员列表', 'icon' => 'hand-o-right', 'url' => ['admin/index']],
-                        ],
-                    ],
-
-
-
-
-
-                    [
-                        'label' => 'Same tools',
-                        'icon' => 'share',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],],
-                            ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
-                            [
-                                'label' => 'Level One',
-                                'icon' => 'circle-o',
-                                'url' => '#',
-                                'items' => [
-                                    ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
-                                    [
-                                        'label' => 'Level Two',
-                                        'icon' => 'circle-o',
-                                        'url' => '#',
-                                        'items' => [
-                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
+                'items' => mdm\admin\components\MenuHelper::getAssignedMenu(Yii::$app->user->id,null,$callback = function($menu){
+                    $data = json_decode($menu['data'], true);
+                    $items = $menu['children'];
+                    $return = [
+                        'label' => $menu['name'],
+                        'url' => [$menu['route']],
+                    ];
+                    //处理我们的配置
+                    if ($data) {
+                        //visible
+                        isset($data['visible']) && $return['visible'] = $data['visible'];
+                        //icon
+                        isset($data['icon']) && $data['icon'] && $return['icon'] = $data['icon'];
+                        //other attribute e.g. class...
+                        $return['options'] = $data;
+                    }
+                    //没配置图标的显示默认图标
+                    (!isset($return['icon']) || !$return['icon']) && $return['icon'] = 'fa fa-circle-o';
+                    $items && $return['items'] = $items;
+                    return $return;
+                }),
             ]
         ) ?>
 

@@ -4,9 +4,11 @@ namespace backend\controllers;
 use Yii;
 use backend\models\Admin;
 use yii\helpers\ArrayHelper;
+use yii\web\HttpException;
 
 class AdminController extends \yii\web\Controller
 {
+    public $enableCsrfValidation = false;
     /**
      * 管理员列表
      * @return string
@@ -14,7 +16,17 @@ class AdminController extends \yii\web\Controller
     public function actionIndex()
     {
         $admins=Admin::find()->all();
+
         return $this->render('index',['admins'=>$admins]);
+    }
+
+    /**
+     * 显示后台首页
+     * @return string
+     */
+    public function actionHome()
+    {
+        return $this->render('home');
     }
 
     /**
@@ -79,7 +91,7 @@ class AdminController extends \yii\web\Controller
 
 //        var_dump(\Yii::$app->request->getUserIP());exit;
         $admin->password="";
-        return $this->render('add',['admin'=>$admin]);
+        return $this->render('add',['admin'=>$admin, 'roles' => $roles]);
 
     }
 
@@ -105,22 +117,23 @@ class AdminController extends \yii\web\Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+//            return $this->goHome();
+            return $this->redirect(['index']);
         }
         $model=new Admin();
         $re=Yii::$app->request;
         if($re->isPost){
             $model->load($re->post());
-            $admin=Admin::findOne(['username'=>$model->username]);
+            $admin=Admin::findOne(['username'=>$re->post()['username']]);
             if($admin){
-                if(Yii::$app->security->validatePassword($model->password,$admin->password)){
+                if(Yii::$app->security->validatePassword($re->post()['password'],$admin->password)){
                     $admin->auth_key=Yii::$app->security->generateRandomString();
                     $admin->last_lg_time=time();
                     $admin->last_lg_ip=Yii::$app->request->getUserIP();
                     $admin->save();
                     Yii::$app->user->login($admin,$model->rememberMe?3600*24*7:0);
                     Yii::$app->session->setFlash('success','登陆成功');
-                    return $this->redirect(['index']);
+                    return $this->redirect(['home']);
                 }else{
                     $model->addError('password','密码不正确');
                 }
