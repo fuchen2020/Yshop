@@ -131,6 +131,8 @@ class GoodsController extends \yii\web\Controller
             \Yii::$app->session->setFlash("success", "添加成功");
             return $this->redirect(['goods/index']);
         }
+
+        $goods->logo='http://7xl74q.com1.z0.glb.clouddn.com/morentu.png';
         return $this->render('add',['goods'=>$goods,'goodsDetails'=>$goodsDetails,'cate'=>$cate,'brand'=>$brand]);
     }
 

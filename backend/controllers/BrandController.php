@@ -49,6 +49,7 @@ class BrandController extends \yii\web\Controller
             return $this->redirect(['brand/index']);
         }
         $model->status=1;
+        $model->logo='http://7xl74q.com1.z0.glb.clouddn.com/morentu.png';
         return $this->render('add',['model'=>$model]);
     }
 
