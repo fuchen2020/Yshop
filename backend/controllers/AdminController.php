@@ -72,6 +72,7 @@ class AdminController extends \yii\web\Controller
     public function actionEdit($id)
     {
         $admin=Admin::findOne($id);
+        $auth=Yii::$app->authManager;
         $re=\Yii::$app->request;
         if($re->isPost){
 
@@ -91,6 +92,8 @@ class AdminController extends \yii\web\Controller
 
 //        var_dump(\Yii::$app->request->getUserIP());exit;
         $admin->password="";
+        $role=$auth->getRoles();
+        $roles=ArrayHelper::map($role,'name','name');
         return $this->render('add',['admin'=>$admin, 'roles' => $roles]);
 
     }
@@ -153,6 +156,30 @@ class AdminController extends \yii\web\Controller
         Yii::$app->user->logout();
 //        return $this->goHome();
         return $this->redirect(['login']);
+    }
+
+    public function actionUpdate($id)
+    {
+        $admin=Admin::findOne($id);
+        $re=Yii::$app->request;
+        if($re->isPost){
+//            var_dump($re->post());exit;
+            if($admin->load($re->post()) && $admin->validate()){
+                //hash加密
+                $pass=\Yii::$app->security->generatePasswordHash($admin->password);
+                $admin->password=$pass;
+                $admin->save();
+                \Yii::$app->session->setFlash('success','修改成功');
+                return $this->redirect(['index']);
+            }else{
+                $admin->getErrors();exit;
+            }
+
+        }
+
+
+        $admin->password="";
+        return $this->render('update',compact('admin'));
     }
 
 

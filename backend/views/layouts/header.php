@@ -258,7 +258,12 @@ use yii\helpers\Html;
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+<!--                                <a href="#" class="btn btn-default btn-flat">-->
+                                    <?= Html::a(
+                                        '修改资料',
+                                        ['admin/update?id='.Yii::$app->user->id],
+                                        ['class' => 'btn btn-default btn-flat']
+                                    ) ?>
                             </div>
                             <div class="pull-right">
                                 <?= Html::a(
