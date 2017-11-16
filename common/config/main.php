@@ -13,9 +13,15 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
+        //Url路由美化
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
     ],
     //配置语言包
     'language'=>'zh-CN',
-    //访问默认控制器
-    'defaultRoute'=>'admin/home',
+
 ];

@@ -45,13 +45,13 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
+        //Url路由美化
+//        'urlManager' => [
+//            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+//            'rules' => [
+//            ],
+//        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\DbManager'
         ],
@@ -96,4 +96,6 @@ return [
 
     'params' => $params,
     'name'=>'麦咖商城',
+    //访问默认控制器
+    'defaultRoute'=>'admin/login',
 ];
