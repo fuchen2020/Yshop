@@ -79,7 +79,7 @@ class GoodsController extends \yii\web\Controller
         $goods=new Goods();
         $goodsDetails=new GoodsDetails();
         $goodsDaycount=new GoodsDayCount();
-        $cate=ArrayHelper::map(GoodsCaetgory::find()->where(['depth'=>1])->all(),'id','name');
+        $cate=ArrayHelper::map(GoodsCaetgory::find()->where(['depth'=>2])->all(),'id','name');
         $brand=ArrayHelper::map(Brand::find()->all(),'id','name');
         $re=\Yii::$app->request;
         if($re->isPost) {
@@ -146,7 +146,7 @@ class GoodsController extends \yii\web\Controller
         $goods=Goods::findOne($id);
         $goodsDetails=GoodsDetails::findOne(['goods_id'=>$id]);
         $goodsImgs=GoodsImg::find()->where(['goods_id'=>$id])->all();
-        $cate=ArrayHelper::map(GoodsCaetgory::find()->where(['depth'=>1])->all(),'id','name');
+        $cate=ArrayHelper::map(GoodsCaetgory::find()->where(['depth'=>2])->all(),'id','name');
         $brand=ArrayHelper::map(Brand::find()->all(),'id','name');
         $re=\Yii::$app->request;
         if($re->isPost) {

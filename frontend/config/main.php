@@ -15,6 +15,10 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
+        'carts'=>[
+            'class'=>\frontend\components\Cart::className(),
+        ],
+
         'user' => [
             'identityClass' =>\frontend\models\Users::className(),
             'enableAutoLogin' => true,
@@ -45,4 +49,6 @@ return [
 //            ],
         ],
     'params' => $params,
+    //访问默认控制器
+    'defaultRoute'=>'index/index',
 ];

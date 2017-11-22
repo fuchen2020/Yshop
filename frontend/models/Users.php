@@ -160,5 +160,4 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     }
 
 
-
 }

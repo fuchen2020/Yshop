@@ -37,7 +37,7 @@
                     </li>
                     <li>
                         <label for="">验证码：</label>
-                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Users[captcha]" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
+                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Users[captcha]" disabled="disabled" id="captcha" onblur="upperCase(this)"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
                     </li>
                     <li class="checkcode">
                         <label for="">验证码：</label>
@@ -53,7 +53,7 @@
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="submit" value="" class="login_btn" />
+                        <input type="submit" value="" class="login_btn"  id="send"/>
                     </li>
                 </ul>
             </form>
@@ -92,8 +92,29 @@
             },1000);
 //        console.dir(tel);
             $.get(["sms"], {'tel':tel})
-
-
         }
+//短信验证码验证
+       function upperCase(){
+           var tel=$('#tel').val();
+           var code=$('#captcha').val();
+           if(tel){
+               if(code){
+                   $.get(["check"], {'code':code,'tel':tel},function (data) {
+                        console.dir(data);
+                        if(data==="验证成功"){
+                            alert("短信验证成功");
+                        }else {
+                            alert(data);
+                        }
+                   })
+               }else {
+                   alert('手机验证码不能为空');
+               }
+           }else {
+               alert('手机号码不能为空');
+           }
+
+       }
+
 
 </script>

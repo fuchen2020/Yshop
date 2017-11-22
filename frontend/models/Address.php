@@ -18,6 +18,7 @@ use Yii;
  */
 class Address extends \yii\db\ActiveRecord
 {
+    public $default;
     /**
      * @inheritdoc
      */
@@ -32,10 +33,10 @@ class Address extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['users_id', 'consignee', 'province', 'county', 'town'], 'required'],
+            [['users_id', 'consignee', 'province', 'county', 'city','tel','detailed_address'], 'required'],
             [['users_id'], 'integer'],
-            [['consignee', 'Detailed_address'], 'string', 'max' => 255],
-            [['province', 'county', 'town', 'tel'], 'string', 'max' => 20],
+            [['consignee', 'detailed_address'], 'string', 'max' => 255],
+            [['default'],'safe'],
         ];
     }
 
@@ -49,10 +50,15 @@ class Address extends \yii\db\ActiveRecord
             'users_id' => '用户ID',
             'consignee' => '收货人',
             'province' => '省份',
-            'county' => '县市',
-            'town' => '区镇',
+            'city' => '县市',
+            'county' => '区镇',
             'Detailed_address' => '详细地址',
             'tel' => '收货电话',
         ];
+    }
+
+    public function getUname()
+    {
+        return Users::findOne($this->users_id)->username;
     }
 }

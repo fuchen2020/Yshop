@@ -84,6 +84,11 @@ class GoodsCaetgory extends \yii\db\ActiveRecord
         return new MenuQuery(get_called_class());
     }
 
+    public function getChildren()
+    {
+        return $this->hasMany(self::className(),['parent_id'=>'id']);
+    }
+
 
 
 }

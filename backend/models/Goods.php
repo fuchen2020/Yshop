@@ -88,7 +88,16 @@ class Goods extends \yii\db\ActiveRecord
      */
     public function getCateName()
     {
-        return GoodsCaetgory::findOne($this->goods_category_id)->name;
+        return GoodsCaetgory::findOne($this->goods_category_id);
+    }
+
+    /**
+     * 查询父级分类名称
+     * @return string
+     */
+    public function getCateParent()
+    {
+        return GoodsCaetgory::findOne(GoodsCaetgory::findOne($this->goods_category_id)->parent_id);
     }
 
     /**
@@ -109,5 +118,22 @@ class Goods extends \yii\db\ActiveRecord
         return self::$statu[$this->status];
     }
 
+    /**
+     * 获取商品详情
+     * @return string
+     */
+    public function getDetail()
+    {
+        return GoodsDetails::findOne(['goods_id'=>$this->id])->content;
+    }
+
+    /**
+     * 获取商品详情多图
+     * @return mixed
+     */
+    public function getImgs()
+    {
+        return GoodsImg::find()->where(['goods_id'=>$this->id])->asArray()->all();
+    }
 
 }

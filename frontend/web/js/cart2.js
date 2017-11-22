@@ -26,6 +26,14 @@ $(function(){
 		$(".delivery_info").hide();
 		$(".delivery_select").show();
 	})
+	//更新运费价格到底部信息
+    $(".express").change(function(){
+        var price=$(this).attr('price');
+        var zong=$('#zong').text();
+        $('.yinfu').empty();
+		$('#yunfei').text(price);
+        $('.yinfu').text(parseFloat(price)+parseFloat(zong));
+    })
 
 	$("input[name=delivery]").click(function(){
 		$(this).parent().parent().addClass("cur").siblings().removeClass("cur");
