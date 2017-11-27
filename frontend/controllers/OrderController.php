@@ -189,11 +189,6 @@ class OrderController extends Controller
         }
         //   var_dump($result);
     }
-    public function actionDemo()
-    {
-        return $this->render('demo');
-    }
-
 
     /**
      * 捕获微信支付返回结果
@@ -230,7 +225,7 @@ class OrderController extends Controller
 
 
     /**
-     * 订单完成
+     * 订单完成页面，并返回支付二维码
      * @return string
      */
     public function actionCart3()
